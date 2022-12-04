@@ -77,6 +77,12 @@
     <string name="settings_location_message">Tag your recordings with your current position</string>
     <!-- Settings: recording in high quality -->
     <string name="settings_quality_high">Record in high quality</string>
+    <!-- Settings: circular recording -->
+    <string name="settings_circular_recording">Circular recording</string>
+    <!-- Settings: circular recording -->
+    <string name="settings_circular_recording_period">Circular recording period, in minutes</string>
+    <!-- Settings: circular recording -->
+    <string name="settings_circular_recording_number">Circular recording, number of periods</string>
 
     <!-- Permissions -->
     <!-- Permissions dialog title -->

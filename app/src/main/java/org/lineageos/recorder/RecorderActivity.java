@@ -59,14 +59,8 @@ import org.lineageos.recorder.utils.PermissionManager;
 import org.lineageos.recorder.utils.PreferencesManager;
 import org.lineageos.recorder.utils.Utils;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.time.temporal.ChronoUnit;
-import java.util.Locale;
-
 public class RecorderActivity extends AppCompatActivity {
-    private static final String FILE_NAME_BASE = "%1$s (%2$s)";
+    public static final String FILE_NAME_BASE = "%1$s (%2$s)";
     private static final String FILE_NAME_FALLBACK = "Sound record";
 
     private FloatingActionButton mSoundFab;
@@ -249,9 +243,14 @@ public class RecorderActivity extends AppCompatActivity {
 
         if (mUiStatus == UiStatus.READY) {
             // Start
+            boolean circularRecording = mPreferencesManager.getCircularRecording();
+            if (circularRecording) {
+                mPermissionManager.requestBatteryPermission();
+            }
             startService(new Intent(this, SoundRecorderService.class)
                     .setAction(SoundRecorderService.ACTION_START)
-                    .putExtra(SoundRecorderService.EXTRA_FILE_NAME, getNewRecordFileName()));
+                    .putExtra(SoundRecorderService.IS_CIRCULAR, circularRecording)
+                    .putExtra(SoundRecorderService.EXTRA_FILE_NAME, getTag()));
         } else {
             // Stop
             startService(new Intent(this, SoundRecorderService.class)
@@ -379,16 +378,9 @@ public class RecorderActivity extends AppCompatActivity {
                 .show();
     }
 
-    private String getNewRecordFileName() {
+    private String getTag() {
         final String tag = mLocationHelper.getCurrentLocationName()
                 .orElse(FILE_NAME_FALLBACK);
-        final DateTimeFormatter formatter = new DateTimeFormatterBuilder()
-                .append(DateTimeFormatter.ISO_LOCAL_DATE)
-                .appendLiteral(' ')
-                .append(DateTimeFormatter.ISO_LOCAL_TIME)
-                .toFormatter(Locale.getDefault());
-        final LocalDateTime now = LocalDateTime.now();
-        return String.format(FILE_NAME_BASE, tag,
-                formatter.format(now.truncatedTo(ChronoUnit.SECONDS))) + ".%1$s";
+        return tag;
     }
 }

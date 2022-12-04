@@ -4,11 +4,11 @@ android {
     compileSdkVersion 31
 
     defaultConfig {
-        applicationId "org.lineageos.recorder"
+        applicationId "org.lineageos.recorder.circular"
         minSdkVersion 29
         targetSdkVersion 31
-        versionCode 1
-        versionName "1.1"
+        versionCode 100001
+        versionName "1.0.1.1"
     }
     buildTypes {
         release {

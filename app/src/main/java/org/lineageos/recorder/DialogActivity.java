@@ -16,11 +16,14 @@
 package org.lineageos.recorder;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.SwitchCompat;
 
 import org.lineageos.recorder.utils.PermissionManager;
@@ -32,6 +35,7 @@ public class DialogActivity extends AppCompatActivity {
     private PermissionManager mPermissionManager;
     private PreferencesManager mPreferences;
     private SwitchCompat mLocationSwitch;
+    private SwitchCompat mCircularSwitch;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstance) {
@@ -59,6 +63,21 @@ public class DialogActivity extends AppCompatActivity {
                 R.id.dialog_content_settings_high_quality_switch);
         if (highQualitySwitch != null) {
             setupHighQualitySwitch(highQualitySwitch, isRecording);
+        }
+        mCircularSwitch = dialog.findViewById(
+                R.id.dialog_content_settings_circular_recording_switch);
+        if (mCircularSwitch != null) {
+            setupCircularSwitch(mCircularSwitch, isRecording);
+        }
+        final AppCompatEditText circularPeriodInput = dialog.findViewById(
+                R.id.dialog_content_settings_circular_recording_period_input);
+        if (circularPeriodInput != null) {
+            setupCircularPeriodInput(circularPeriodInput, isRecording);
+        }
+        final AppCompatEditText circularNumberInput = dialog.findViewById(
+                R.id.dialog_content_settings_circular_recording_number_input);
+        if (circularNumberInput != null) {
+            setupCircularNumberInput(circularNumberInput, isRecording);
         }
     }
 
@@ -131,6 +150,87 @@ public class DialogActivity extends AppCompatActivity {
         } else {
             highQualitySwitch.setOnCheckedChangeListener((button, isChecked) ->
                     mPreferences.setRecordingHighQuality(isChecked));
+        }
+    }
+
+    // basically a copy of setupLocationSwitch
+    private void setupCircularSwitch(@NonNull SwitchCompat circularSwitch,
+                                     boolean isRecording) {
+        final boolean circularRecording;
+        if (mPreferences.getCircularRecording()) {
+            if (mPermissionManager.hasBatteryPermission()) {
+                circularRecording = true;
+            } else {
+                // Permission revoked -> disabled feature
+                mPreferences.setCircularRecording(false);
+                circularRecording = false;
+            }
+        } else {
+            circularRecording = false;
+        }
+
+        circularSwitch.setChecked(circularRecording);
+
+        if (isRecording) {
+            circularSwitch.setEnabled(false);
+        } else {
+            circularSwitch.setOnCheckedChangeListener((button, isChecked) -> {
+                if (isChecked) {
+                    if (mPermissionManager.hasBatteryPermission()) {
+                        mPreferences.setCircularRecording(true);
+                    } else {
+                        mPermissionManager.requestBatteryPermission();
+                    }
+                } else {
+                    mPreferences.setCircularRecording(false);
+                }
+            });
+        }
+    }
+
+    private void setupCircularPeriodInput(@NonNull AppCompatEditText input, boolean isRecording) {
+        final long val = mPreferences.getCircularRecordingPeriod();
+        input.setText(new java.text.DecimalFormat("0.#").format(((double)val) / 60.0));
+
+        if (isRecording) {
+            input.setEnabled(false);
+        } else {
+            input.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void afterTextChanged(Editable s) {
+                    final String str = s.toString();
+                    if (str.length() > 0) {
+                        mPreferences.setCircularRecordingPeriod((long)(Double.parseDouble(str) * 60.0));
+                    }
+                }
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {}
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            });
+        }
+    }
+
+    private void setupCircularNumberInput(@NonNull AppCompatEditText input, boolean isRecording) {
+        final int val = mPreferences.getCircularRecordingNumber();
+        input.setText(Integer.toString(val));
+
+        if (isRecording) {
+            input.setEnabled(false);
+        } else {
+            input.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void afterTextChanged(Editable s) {
+                    final String str = s.toString();
+                    if (str.length() > 0) {
+                        mPreferences.setCircularRecordingNumber(Integer.parseInt(str));
+                    }
+                }
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {}
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            });
         }
     }
 

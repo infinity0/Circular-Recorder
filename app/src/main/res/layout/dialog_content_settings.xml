@@ -33,4 +33,58 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:text="@string/settings_quality_high" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/dialog_content_settings_circular_recording_switch"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="@string/settings_circular_recording" />
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:paddingEnd="8sp">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/dialog_content_settings_circular_recording_period_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_circular_recording_period" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/dialog_content_settings_circular_recording_period_input"
+            android:layout_width="52sp"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:gravity="right" />
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:paddingEnd="8sp">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/dialog_content_settings_circular_recording_number_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_circular_recording_number" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/dialog_content_settings_circular_recording_number_input"
+            android:layout_width="36sp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:gravity="right" />
+    </LinearLayout>
 </LinearLayout>

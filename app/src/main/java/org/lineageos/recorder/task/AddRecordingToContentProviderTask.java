@@ -33,36 +33,40 @@ import java.nio.file.Path;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 
-public final class AddRecordingToContentProviderTask implements Callable<Optional<String>> {
+public final class AddRecordingToContentProviderTask implements Callable<Optional<Uri>> {
     private static final String TAG = "AddRecordingToContentProviderTask";
     private static final String ARTIST = "Recorder";
     private static final String ALBUM = "Sound records";
-    private static final String PATH = "Recordings/" + ALBUM;
-    private static final String PATH_LEGACY = "Music/" + ALBUM;
+    private static final String DIR_PATH = "Recordings/";
+    private static final String DIR_PATH_LEGACY = "Music/";
 
     @Nullable
     private final ContentResolver cr;
     @Nullable
     private final Path path;
+    @Nullable
+    private final String album;
     @NonNull
     private final String mimeType;
 
     public AddRecordingToContentProviderTask(@Nullable ContentResolver cr,
                                              @Nullable Path path,
+                                             @Nullable String album,
                                              @NonNull String mimeType) {
         this.cr = cr;
         this.path = path;
+        this.album = album;
         this.mimeType = mimeType;
     }
 
     @Override
-    public Optional<String> call() {
+    public Optional<Uri> call() {
         if (cr == null || path == null) {
             return Optional.empty();
         }
 
         final Uri uri = cr.insert(MediaStore.Audio.Media.getContentUri(
-                MediaStore.VOLUME_EXTERNAL_PRIMARY), buildCv(path));
+                MediaStore.VOLUME_EXTERNAL_PRIMARY), buildCv(path, album));
         if (uri == null) {
             Log.e(TAG, "Failed to insert " + path.toAbsolutePath().toString());
             return Optional.empty();
@@ -85,24 +89,25 @@ public final class AddRecordingToContentProviderTask implements Callable<Optiona
             } catch (IOException e) {
                 Log.w(TAG, "Failed to delete tmp file");
             }
-            return Optional.of(uri.toString());
+            return Optional.of(uri);
         } catch (IOException e) {
             Log.e(TAG, "Failed to write into MediaStore", e);
             return Optional.empty();
         }
     }
 
-    private ContentValues buildCv(@NonNull Path path) {
+    private ContentValues buildCv(@NonNull Path path, @Nullable String album) {
         final String name = path.getFileName().toString();
         final ContentValues values = new ContentValues();
+        if (album == null) album = ALBUM;
+        final String relativePath = (Build.VERSION.SDK_INT >= 31 ? DIR_PATH : DIR_PATH_LEGACY) + album;
         values.put(MediaStore.Audio.Media.DISPLAY_NAME, name);
         values.put(MediaStore.Audio.Media.TITLE, name);
         values.put(MediaStore.Audio.Media.MIME_TYPE, mimeType);
         values.put(MediaStore.Audio.Media.ARTIST, ARTIST);
-        values.put(MediaStore.Audio.Media.ALBUM, ALBUM);
+        values.put(MediaStore.Audio.Media.ALBUM, album);
         values.put(MediaStore.Audio.Media.DATE_ADDED, System.currentTimeMillis() / 1000L);
-        values.put(MediaStore.Audio.Media.RELATIVE_PATH,
-                Build.VERSION.SDK_INT >= 31 ? PATH : PATH_LEGACY);
+        values.put(MediaStore.Audio.Media.RELATIVE_PATH, relativePath);
         values.put(MediaStore.Audio.Media.IS_PENDING, 1);
         return values;
     }

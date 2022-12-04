@@ -50,6 +50,7 @@ import org.lineageos.recorder.R;
 import org.lineageos.recorder.RecorderActivity;
 import org.lineageos.recorder.status.UiStatus;
 import org.lineageos.recorder.task.AddRecordingToContentProviderTask;
+import org.lineageos.recorder.task.DeleteRecordingTask;
 import org.lineageos.recorder.task.TaskExecutor;
 import org.lineageos.recorder.utils.RecordIntentHelper;
 import org.lineageos.recorder.utils.PreferencesManager;
@@ -58,9 +59,15 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -80,6 +87,7 @@ public class SoundRecorderService extends Service {
     public static final int MSG_TIME_ELAPSED = 4;
 
     public static final String EXTRA_FILE_NAME = "extra_filename";
+    public static final String IS_CIRCULAR = "is_circular";
     private static final String LEGACY_MUSIC_DIR = "Sound records";
 
     public static final int NOTIFICATION_ID = 60;
@@ -88,6 +96,11 @@ public class SoundRecorderService extends Service {
     private NotificationManager mNotificationManager;
     private PreferencesManager mPreferencesManager;
     private TaskExecutor mTaskExecutor;
+
+    // Circular recording state
+    private String circularRecordingDirectory = null;
+    private LinkedList<Uri> circularRecordings = null;
+    private boolean autoReRecord = false;
 
     private final Object mLock = new Object();
 
@@ -114,6 +127,7 @@ public class SoundRecorderService extends Service {
     private final Messenger mMessenger = new Messenger(mHandler);
 
     private SoundRecording mRecorder = null;
+    private String mTag = null;
     private Path mRecordPath = null;
 
     private Timer mAmplitudeTimer;
@@ -167,7 +181,9 @@ public class SoundRecorderService extends Service {
         }
         switch (intent.getAction()) {
             case ACTION_START:
-                return startRecording(intent.getStringExtra(EXTRA_FILE_NAME))
+                return startRecording(
+                    intent.getStringExtra(EXTRA_FILE_NAME),
+                    intent.getBooleanExtra(IS_CIRCULAR, false))
                         ? START_STICKY : START_NOT_STICKY;
             case ACTION_STOP:
                 return stopRecording() ? START_STICKY : START_NOT_STICKY;
@@ -180,7 +196,25 @@ public class SoundRecorderService extends Service {
         }
     }
 
-    private boolean startRecording(String fileName) {
+    private String getFileName(String tag, boolean circularRecording) {
+        final DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+                .append(DateTimeFormatter.ISO_LOCAL_DATE)
+                .appendLiteral(' ')
+                .append(DateTimeFormatter.ISO_LOCAL_TIME)
+                .toFormatter(Locale.getDefault());
+        final LocalDateTime now = LocalDateTime.now();
+        String fileName = String.format(RecorderActivity.FILE_NAME_BASE, tag,
+                formatter.format(now.truncatedTo(ChronoUnit.SECONDS)));
+        if (circularRecording) {
+            if (circularRecordingDirectory == null) {
+                circularRecordingDirectory = fileName;
+                circularRecordings = new LinkedList<Uri>();
+            }
+        }
+        return fileName + ".%1$s";
+    }
+
+    private boolean startRecording(String tag, boolean circularRecording) {
         if (checkSelfPermission(Manifest.permission.RECORD_AUDIO)
                 != PackageManager.PERMISSION_GRANTED) {
             Log.e(TAG, "Missing permission to record audio");
@@ -190,7 +224,9 @@ public class SoundRecorderService extends Service {
         mRecorder = mPreferencesManager.getRecordInHighQuality()
                 ? new HighQualityRecorder()
                 : new GoodQualityRecorder();
+        mTag = tag;
 
+        final String fileName = getFileName(tag, circularRecording);
         final Optional<Path> optPath = createNewAudioFile(fileName, mRecorder.getFileExtension());
         if (optPath.isPresent()) {
             mRecordPath = optPath.get();
@@ -233,6 +269,7 @@ public class SoundRecorderService extends Service {
             mTaskExecutor.runTask(new AddRecordingToContentProviderTask(
                             getContentResolver(),
                             mRecordPath,
+                            circularRecordingDirectory,
                             mRecorder.getMimeType()),
                     this::onRecordCompleted,
                     () -> Log.e(TAG, "Failed to save recording"));
@@ -284,14 +321,34 @@ public class SoundRecorderService extends Service {
         return false;
     }
 
-    private void onRecordCompleted(String uri) {
+    private void onRecordCompleted(Uri uri) {
         notifyStatus(UiStatus.READY);
         stopForeground(STOP_FOREGROUND_REMOVE);
         if (uri != null) {
             mNotificationManager.notify(NOTIFICATION_ID,
-                    createShareNotification(uri));
+                    createShareNotification(uri.toString()));
         }
+        final String tag = mTag;
         mRecorder = null;
+        mTag = null;
+        if (autoReRecord) {
+            autoReRecord = false;
+            Log.i(TAG, "circular recording save: " + uri.toString());
+            startRecording(tag, circularRecordingDirectory != null);
+            if (circularRecordingDirectory != null) {
+                circularRecordings.addLast(uri);
+                while (circularRecordings.size() > mPreferencesManager.getCircularRecordingNumber()) {
+                    final Uri dropUri = circularRecordings.removeFirst();
+                    Log.i(TAG, "circular recording drop: " + dropUri.toString());
+                    mTaskExecutor.runTask(
+                        new DeleteRecordingTask(getContentResolver(), dropUri),
+                        () -> {});
+                }
+            }
+        } else {
+            circularRecordingDirectory = null;
+            circularRecordings = null;
+        }
     }
 
     private void onRecordFailed() {
@@ -338,6 +395,10 @@ public class SoundRecorderService extends Service {
                 notifyElapsedTime(newElapsedTime);
                 Notification notification = createRecordingNotification(newElapsedTime);
                 mNotificationManager.notify(NOTIFICATION_ID, notification);
+                if (circularRecordingDirectory != null && newElapsedTime >= mPreferencesManager.getCircularRecordingPeriod()) {
+                    stopRecording();
+                    autoReRecord = true;
+                }
             }
         }, 1000, 1000);
     }
@@ -473,7 +534,15 @@ public class SoundRecorderService extends Service {
                     new Intent(this, SoundRecorderService.class)
                             .setAction(ACTION_PAUSE),
                     PendingIntent.FLAG_IMMUTABLE);
-            nb.setContentTitle(getString(R.string.sound_recording_title_working));
+            String suffix = "";
+            if (circularRecordingDirectory != null) {
+                long period = mPreferencesManager.getCircularRecordingPeriod();
+                int currentNum = circularRecordings.size();
+                int number = mPreferencesManager.getCircularRecordingNumber();
+                suffix = String.format(" ⏲ %s ↺ %s/%s",
+                    DateUtils.formatElapsedTime(period - elapsedTime), currentNum, number);
+            }
+            nb.setContentTitle(getString(R.string.sound_recording_title_working) + suffix);
             nb.addAction(R.drawable.ic_pause, getString(R.string.pause), pausePIntent);
         }
         nb.addAction(R.drawable.ic_stop, getString(R.string.stop), stopPIntent);

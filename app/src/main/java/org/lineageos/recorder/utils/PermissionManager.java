@@ -17,7 +17,13 @@ package org.lineageos.recorder.utils;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.PowerManager;
+import android.provider.Settings;
+import android.util.Log;
 
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
@@ -28,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class PermissionManager {
+    private static final String TAG = "SoundRecorderService";
     public static final int REQUEST_CODE = 440;
 
     private static final int[] PERMISSION_ERROR_MESSAGE_RES_IDS = {
@@ -68,6 +75,15 @@ public final class PermissionManager {
         }
     }
 
+    public void requestBatteryPermission() {
+        // battery optimisation is not a normal permission and has to be checked specially
+        if (!hasBatteryPermission()) {
+            activity.startActivity(new Intent(
+                Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
+                Uri.parse("package:"+activity.getPackageName())));
+        }
+    }
+
     public boolean hasEssentialPermissions() {
         return hasRecordAudioPermission() && hasPhoneReadStatusPermission();
     }
@@ -85,6 +101,12 @@ public final class PermissionManager {
     public boolean hasLocationPermission() {
         return activity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED;
+    }
+
+    public boolean hasBatteryPermission() {
+        // battery optimisation is not a normal permission and has to be checked specially
+        final PowerManager pwm = (PowerManager)activity.getApplicationContext().getSystemService(Context.POWER_SERVICE);
+        return pwm.isIgnoringBatteryOptimizations(activity.getPackageName());
     }
 
     public void onEssentialPermissionsDenied() {

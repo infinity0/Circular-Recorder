@@ -25,6 +25,9 @@ public final class PreferencesManager {
     private static final String PREFS = "preferences";
     private static final String PREF_TAG_WITH_LOCATION = "tag_with_location";
     private static final String PREF_RECORDING_QUALITY = "recording_quality";
+    private static final String PREF_CIRCULAR_RECORDING = "circular_recording";
+    private static final String PREF_CIRCULAR_RECORDING_PERIOD = "circular_recording_period";
+    private static final String PREF_CIRCULAR_RECORDING_NUMBER = "circular_recording_number";
     private static final String PREF_ONBOARD_SETTINGS_COUNTER = "onboard_settings";
     private static final String PREF_ONBOARD_SOUND_LIST_COUNTER = "onboard_list";
     private static final String PREF_LAST_SOUND = "sound_last_path";
@@ -53,6 +56,37 @@ public final class PreferencesManager {
 
     public boolean getTagWithLocation() {
         return mPreferences.getBoolean(PREF_TAG_WITH_LOCATION, false);
+    }
+
+    public void setCircularRecording(boolean circularRecording) {
+        mPreferences.edit()
+                .putBoolean(PREF_CIRCULAR_RECORDING, circularRecording)
+                .apply();
+    }
+
+    public boolean getCircularRecording() {
+        // TODO: switch the default back to "false" if we merge back into upstream
+        return mPreferences.getBoolean(PREF_CIRCULAR_RECORDING, true);
+    }
+
+    public void setCircularRecordingPeriod(long circularRecordingPeriod) {
+        mPreferences.edit()
+                .putLong(PREF_CIRCULAR_RECORDING_PERIOD, circularRecordingPeriod)
+                .apply();
+    }
+
+    public long getCircularRecordingPeriod() {
+        return mPreferences.getLong(PREF_CIRCULAR_RECORDING_PERIOD, 3600);
+    }
+
+    public void setCircularRecordingNumber(int circularRecordingNumber) {
+        mPreferences.edit()
+                .putInt(PREF_CIRCULAR_RECORDING_NUMBER, circularRecordingNumber)
+                .apply();
+    }
+
+    public int getCircularRecordingNumber() {
+        return mPreferences.getInt(PREF_CIRCULAR_RECORDING_NUMBER, 3);
     }
 
     public int getOnboardSettingsCounter() {
