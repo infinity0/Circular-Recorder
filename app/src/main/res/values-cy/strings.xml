@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">Recordydd</string>
+    <string name="app_name">Circular Recorder</string>
     <string name="share">Rhannu</string>
     <string name="share_selected">Rhan wedi\'i ddewis</string>
     <string name="stop">Stopio</string>
@@ -33,7 +33,7 @@
     <string name="record_again">Recordio eto</string>
     <string name="confirm_result_title">Defnyddio\'r recordiad?</string>
     <string name="confirm_result_message">Wyt ti am ddefnyddio\'r recordiad diwethaf?</string>
-    <string name="sound_notification_title">Recordydd Sain</string>
+    <string name="sound_notification_title">Circular Sound Recorder</string>
     <string name="sound_notification_message">Hyd sain: %1$s</string>
     <string name="sound_recording_title_working">Yn recordio</string>
     <string name="sound_recording_title_paused">Wedi seibio</string>

@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">Perekam</string>
+    <string name="app_name">Circular Recorder</string>
     <string name="share">Bagikan</string>
     <string name="share_selected">Bagikan yang dipilih</string>
     <string name="stop">Hentikan</string>
@@ -33,7 +33,7 @@
     <string name="record_again">Rekam ulang</string>
     <string name="confirm_result_title">Gunakan rekaman?</string>
     <string name="confirm_result_message">Apakah Anda ingin menggunakan rekaman terakhir?</string>
-    <string name="sound_notification_title">Perekam Suara</string>
+    <string name="sound_notification_title">Circular Sound Recorder</string>
     <string name="sound_notification_message">Durasi audio: %1$s</string>
     <string name="sound_recording_title_working">Merekam</string>
     <string name="sound_recording_title_paused">Dijeda</string>

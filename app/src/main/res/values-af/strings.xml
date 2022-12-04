@@ -14,13 +14,13 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">Opnemer</string>
+    <string name="app_name">Circular Recorder</string>
     <string name="share">Deel</string>
     <string name="stop">Stop</string>
     <string name="play">Speel</string>
     <string name="delete">Verwyder</string>
     <string name="delete_title">Verwyde opname</string>
-    <string name="sound_notification_title">Klankopnemer</string>
+    <string name="sound_notification_title">Circular Sound Recorder</string>
     <string name="sound_notification_message">Oudio-lengte: %1$s</string>
     <string name="sound_recording_title_working">Neem tans op</string>
     <string name="sound_last_title">Laaste opname</string>

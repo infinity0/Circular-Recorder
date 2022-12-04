@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">Snimanje</string>
+    <string name="app_name">Circular Recorder</string>
     <string name="share">Podijeli</string>
     <string name="stop">Zaustavi</string>
     <string name="play">Reproduciraj</string>
@@ -25,7 +25,7 @@
     <string name="rename">Preimenuj</string>
     <string name="delete_title">Brisanje zapisa</string>
     <string name="delete_recording_message">Jeste li sigurni da želite izbrisati ovu snimku? To se ne može poništiti</string>
-    <string name="sound_notification_title">Snimanje zvuka</string>
+    <string name="sound_notification_title">Circular Sound Recorder</string>
     <string name="sound_notification_message">Duljina audiozapisa: %1$s</string>
     <string name="sound_recording_title_working">Snimanje</string>
     <string name="sound_recording_title_paused">Pauzirano</string>

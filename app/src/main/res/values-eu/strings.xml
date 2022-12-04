@@ -14,14 +14,14 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">Grabatzailea</string>
+    <string name="app_name">Circular Recorder</string>
     <string name="share">Partekatu</string>
     <string name="stop">Gelditu</string>
     <string name="play">Erreproduzitu</string>
     <string name="delete">Ezabatu</string>
     <string name="cancel">Utzi</string>
     <string name="delete_title">Grabaketa ezabatzen</string>
-    <string name="sound_notification_title">Soinu grabagailua</string>
+    <string name="sound_notification_title">Circular Sound Recorder</string>
     <string name="sound_notification_message">Audioaren iraupena: %1$s</string>
     <string name="sound_recording_title_working">Grabatzen</string>
     <string name="sound_last_title">Azken grabaketa</string>

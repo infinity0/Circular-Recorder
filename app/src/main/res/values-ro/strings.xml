@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">Recorder</string>
+    <string name="app_name">Circular Recorder</string>
     <string name="share">Distribuiți</string>
     <string name="share_selected">Distribuiți selecția</string>
     <string name="stop">Stop</string>
@@ -33,7 +33,7 @@
     <string name="record_again">Înregistrează din nou</string>
     <string name="confirm_result_title">Utilizaţi înregistrarea?</string>
     <string name="confirm_result_message">Doriţi să utilizaţi ultima înregistrare?</string>
-    <string name="sound_notification_title">Înregistrare Sunet</string>
+    <string name="sound_notification_title">Circular Sound Recorder</string>
     <string name="sound_notification_message">Lungime audio: %1$s</string>
     <string name="sound_recording_title_working">Înregistrare</string>
     <string name="sound_recording_title_paused">În pauză</string>

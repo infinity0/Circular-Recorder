@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">Recorder</string>
+    <string name="app_name">Circular Recorder</string>
     <string name="share">Delen</string>
     <string name="share_selected">Selectie delen</string>
     <string name="stop">Stoppen</string>
@@ -33,7 +33,7 @@
     <string name="record_again">Neem opnieuw op</string>
     <string name="confirm_result_title">Opname gebruiken?</string>
     <string name="confirm_result_message">Wilt u de laatste opname gebruiken?</string>
-    <string name="sound_notification_title">Geluidsrecorder</string>
+    <string name="sound_notification_title">Circular Sound Recorder</string>
     <string name="sound_notification_message">Audiolengte: %1$s</string>
     <string name="sound_recording_title_working">Opnemen</string>
     <string name="sound_recording_title_paused">Gepauzeerd</string>

@@ -14,14 +14,14 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">מקליט</string>
+    <string name="app_name">Circular Recorder</string>
     <string name="share">שיתוף</string>
     <string name="stop">עצור</string>
     <string name="play">נגן</string>
     <string name="delete">מחק</string>
     <string name="cancel">ביטול</string>
     <string name="delete_title">מחיקת הקלטה</string>
-    <string name="sound_notification_title">מקליט שמע</string>
+    <string name="sound_notification_title">Circular Sound Recorder</string>
     <string name="sound_notification_message">אורך השמע: %1$s</string>
     <string name="sound_recording_title_working">מקליט</string>
     <string name="sound_last_title">הקלטה אחרונה</string>

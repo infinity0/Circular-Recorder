@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">Grabadora</string>
+    <string name="app_name">Circular Recorder</string>
     <string name="share">Compartir</string>
     <string name="share_selected">Compartir lo seleicionao</string>
     <string name="stop">Parar</string>

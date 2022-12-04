@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">Recorder</string>
+    <string name="app_name">Circular Recorder</string>
 
     <!-- Common actions -->
     <!-- Share action for notification -->
@@ -56,7 +56,7 @@
 
     <!-- Sound recorder -->
     <!-- Sound recorder notification title -->
-    <string name="sound_notification_title">Sound Recorder</string>
+    <string name="sound_notification_title">Circular Sound Recorder</string>
     <!-- Sound recorder notification message -->
     <string name="sound_notification_message">Audio length: %1$s</string>
     <!-- Sound recorder status card title recording -->

@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">Amaklas</string>
+    <string name="app_name">Circular Recorder</string>
     <string name="share">Bḍu</string>
     <string name="stop">Seḥbes</string>
     <string name="play">Urar</string>

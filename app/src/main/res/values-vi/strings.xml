@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">Trình ghi lại</string>
+    <string name="app_name">Circular Recorder</string>
     <string name="share">Chia sẻ</string>
     <string name="share_selected">Chia sẻ mục đã chọn</string>
     <string name="stop">Dừng</string>
@@ -33,7 +33,7 @@
     <string name="record_again">Ghi lại</string>
     <string name="confirm_result_title">Lưu bản ghi?</string>
     <string name="confirm_result_message">Bạn có muốn giữ bản ghi gần nhất?</string>
-    <string name="sound_notification_title">Trình ghi âm</string>
+    <string name="sound_notification_title">Circular Sound Recorder</string>
     <string name="sound_notification_message">Độ dài âm thanh: %1$s</string>
     <string name="sound_recording_title_working">Đang ghi</string>
     <string name="sound_recording_title_paused">Đã tạm dừng</string>

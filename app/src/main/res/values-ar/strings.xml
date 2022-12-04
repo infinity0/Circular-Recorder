@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">المُسجل</string>
+    <string name="app_name">Circular Recorder</string>
     <string name="share">مشاركة</string>
     <string name="stop">إيقاف</string>
     <string name="play">تشغيل</string>
@@ -25,7 +25,7 @@
     <string name="rename">إعادة تسمية</string>
     <string name="delete_title">حذف التسجيل</string>
     <string name="delete_recording_message">أمتأكد من أنك تريد حذف هذا التسجيل؟ لا يمكن التراجع عن هذا</string>
-    <string name="sound_notification_title">مُسجل الصوت</string>
+    <string name="sound_notification_title">Circular Sound Recorder</string>
     <string name="sound_notification_message">طول الصوت: %1$s</string>
     <string name="sound_recording_title_working">يتم التسجيل</string>
     <string name="sound_recording_title_paused">موقف مؤقتاً</string>

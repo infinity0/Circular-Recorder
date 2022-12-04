@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">Εγγραφή</string>
+    <string name="app_name">Circular Recorder</string>
     <string name="share">Κοινή χρήση</string>
     <string name="share_selected">Κοινή χρήση επιλεγμένων</string>
     <string name="stop">Διακοπή</string>
@@ -33,7 +33,7 @@
     <string name="record_again">Εγγραφή ξανά</string>
     <string name="confirm_result_title">Χρήση εγγραφής;</string>
     <string name="confirm_result_message">Θέλετε να χρησιμοποιήσετε την τελευταία εγγραφή;</string>
-    <string name="sound_notification_title">Εγγραφή ήχου</string>
+    <string name="sound_notification_title">Circular Sound Recorder</string>
     <string name="sound_notification_message">Μήκος ήχου: %1$s</string>
     <string name="sound_recording_title_working">Γίνεται εγγραφή</string>
     <string name="sound_recording_title_paused">Σε παύση</string>

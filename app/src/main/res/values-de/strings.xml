@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">Rekorder</string>
+    <string name="app_name">Circular Recorder</string>
     <string name="share">Teilen</string>
     <string name="share_selected">Ausgewählte teilen</string>
     <string name="stop">Stoppen</string>
@@ -33,7 +33,7 @@
     <string name="record_again">Aufnahme wiederholen</string>
     <string name="confirm_result_title">Aufnahme verwenden?</string>
     <string name="confirm_result_message">Möchtest du die letzte Aufnahme verwenden?</string>
-    <string name="sound_notification_title">Soundrekorder</string>
+    <string name="sound_notification_title">Circular Sound Recorder</string>
     <string name="sound_notification_message">Audiolänge: %1$s</string>
     <string name="sound_recording_title_working">Wird aufgenommen</string>
     <string name="sound_recording_title_paused">Pausiert</string>

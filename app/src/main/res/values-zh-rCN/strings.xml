@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">录音机</string>
+    <string name="app_name">Circular Recorder</string>
     <string name="share">分享</string>
     <string name="share_selected">分享选中内容</string>
     <string name="stop">停止</string>
@@ -33,7 +33,7 @@
     <string name="record_again">重新录音</string>
     <string name="confirm_result_title">使用录音？</string>
     <string name="confirm_result_message">你想使用上次的录音吗？</string>
-    <string name="sound_notification_title">录音机</string>
+    <string name="sound_notification_title">Circular Sound Recorder</string>
     <string name="sound_notification_message">音频长度：%1$s</string>
     <string name="sound_recording_title_working">正在录制</string>
     <string name="sound_recording_title_paused">已暂停</string>

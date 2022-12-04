@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">Clàradair</string>
+    <string name="app_name">Circular Recorder</string>
     <string name="share">Co-roinn</string>
     <string name="share_selected">Co-roinn na thagh thu</string>
     <string name="stop">Cuir stad air</string>
@@ -33,7 +33,7 @@
     <string name="record_again">Clàraich e às ùr</string>
     <string name="confirm_result_title">A bheil thu airson an clàradh a chleachdadh?</string>
     <string name="confirm_result_message">A bheil thu airson an clàradh mu dheireadh a chleachdadh?</string>
-    <string name="sound_notification_title">Clàradair fuaime</string>
+    <string name="sound_notification_title">Circular Sound Recorder</string>
     <string name="sound_notification_message">Faid na fuaime: %1$s</string>
     <string name="sound_recording_title_working">’Ga chlàradh</string>
     <string name="sound_recording_title_paused">’Na stad</string>

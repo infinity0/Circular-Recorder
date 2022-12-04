@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">Gravador</string>
+    <string name="app_name">Circular Recorder</string>
     <string name="share">Compartir</string>
     <string name="share_selected">Compartir seleccionadas</string>
     <string name="stop">Deter</string>
@@ -33,7 +33,7 @@
     <string name="record_again">Gravar de novo</string>
     <string name="confirm_result_title">Empregar a gravación?</string>
     <string name="confirm_result_message">Desexas empregar a última gravación?</string>
-    <string name="sound_notification_title">Gravador de son</string>
+    <string name="sound_notification_title">Circular Sound Recorder</string>
     <string name="sound_notification_message">Duración do son: %1$s</string>
     <string name="sound_recording_title_working">Gravando</string>
     <string name="sound_recording_title_paused">Pausado</string>

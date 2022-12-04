@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">ჩამწერი</string>
+    <string name="app_name">Circular Recorder</string>
     <string name="share">გაზიარება</string>
     <string name="share_selected">შერჩეულის გაზიარება</string>
     <string name="stop">შეწყვეტა</string>
@@ -33,7 +33,7 @@
     <string name="record_again">კვლავ ჩაწერა</string>
     <string name="confirm_result_title">გსურთ ჩანაწერის გამოყენება?</string>
     <string name="confirm_result_message">გსურთ ბოლო ჩანაწერის გამოყენება?</string>
-    <string name="sound_notification_title">ხმის ჩამწერი</string>
+    <string name="sound_notification_title">Circular Sound Recorder</string>
     <string name="sound_notification_message">ხმის ხანგრძლივობა: %1$s</string>
     <string name="sound_recording_title_working">იწერება</string>
     <string name="sound_recording_title_paused">შეჩერებულია</string>

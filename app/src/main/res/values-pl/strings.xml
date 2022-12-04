@@ -14,14 +14,14 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">Rejestrator</string>
+    <string name="app_name">Circular Recorder</string>
     <string name="share">Udostępnij</string>
     <string name="stop">Zatrzymaj</string>
     <string name="play">Odtwórz</string>
     <string name="delete">Usuń</string>
     <string name="cancel">Anuluj</string>
     <string name="delete_title">Usuwanie nagrania</string>
-    <string name="sound_notification_title">Rejestrator dźwięku</string>
+    <string name="sound_notification_title">Circular Sound Recorder</string>
     <string name="sound_notification_message">Długość dźwięku: %1$s</string>
     <string name="sound_recording_title_working">Nagrywanie</string>
     <string name="sound_last_title">Ostatnie nagranie</string>

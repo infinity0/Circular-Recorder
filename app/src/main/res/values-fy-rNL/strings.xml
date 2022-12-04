@@ -14,14 +14,14 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">Recorder</string>
+    <string name="app_name">Circular Recorder</string>
     <string name="share">Diele</string>
     <string name="stop">Stopje</string>
     <string name="play">Ofspylje</string>
     <string name="delete">Fuortsmite</string>
     <string name="cancel">Annulearje</string>
     <string name="delete_title">Opname fuortsmite</string>
-    <string name="sound_notification_title">Lûddsrecorder</string>
+    <string name="sound_notification_title">Circular Sound Recorder</string>
     <string name="sound_notification_message">Audiolingte: %1$s</string>
     <string name="sound_recording_title_working">Opnimme</string>
     <string name="sound_last_title">Lêste opname</string>

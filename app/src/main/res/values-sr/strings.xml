@@ -14,14 +14,14 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">Снимач</string>
+    <string name="app_name">Circular Recorder</string>
     <string name="share">Дели</string>
     <string name="stop">Заустави</string>
     <string name="play">Пусти</string>
     <string name="delete">Избриши</string>
     <string name="cancel">Прекини</string>
     <string name="delete_title">Брисање снимка</string>
-    <string name="sound_notification_title">Снимање звука</string>
+    <string name="sound_notification_title">Circular Sound Recorder</string>
     <string name="sound_notification_message">Трајање аудио-снимка: %1$s</string>
     <string name="sound_recording_title_working">Снимање</string>
     <string name="sound_last_title">Последњи снимак</string>

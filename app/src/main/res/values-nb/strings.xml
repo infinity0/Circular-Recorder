@@ -14,14 +14,14 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">Opptaker</string>
+    <string name="app_name">Circular Recorder</string>
     <string name="share">Del</string>
     <string name="stop">Stopp</string>
     <string name="play">Spill av</string>
     <string name="delete">Slett</string>
     <string name="cancel">Avbryt</string>
     <string name="delete_title">Sletter opptaket</string>
-    <string name="sound_notification_title">Lydopptaker</string>
+    <string name="sound_notification_title">Circular Sound Recorder</string>
     <string name="sound_notification_message">Lydlengde: %1$s</string>
     <string name="sound_recording_title_working">Tar opp</string>
     <string name="sound_last_title">Siste opptak</string>

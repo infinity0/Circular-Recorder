@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">Regjistruesi</string>
+    <string name="app_name">Circular Recorder</string>
     <string name="share">Ndaj</string>
     <string name="share_selected">Shpërndaj të përzgjedhurat</string>
     <string name="stop">Ndalo</string>
@@ -33,7 +33,7 @@
     <string name="record_again">Regjistro përsëri</string>
     <string name="confirm_result_title">Përdorni regjistrimin?</string>
     <string name="confirm_result_message">Dëshironi të përdorni regjistrimin e fundit?</string>
-    <string name="sound_notification_title">Regjistruesi i Tingujve</string>
+    <string name="sound_notification_title">Circular Sound Recorder</string>
     <string name="sound_notification_message">Gjatësia e audios: %1$s</string>
     <string name="sound_recording_title_working">Duke regjistruar</string>
     <string name="sound_recording_title_paused">Në pauzë</string>

@@ -14,14 +14,14 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">Inspelare</string>
+    <string name="app_name">Circular Recorder</string>
     <string name="share">Dela</string>
     <string name="stop">Avbryt</string>
     <string name="play">Spela upp</string>
     <string name="delete">Radera</string>
     <string name="cancel">Avbryt</string>
     <string name="delete_title">Ta bort inspelning</string>
-    <string name="sound_notification_title">Ljudinspelare</string>
+    <string name="sound_notification_title">Circular Sound Recorder</string>
     <string name="sound_notification_message">Ljudlängd: %1$s</string>
     <string name="sound_recording_title_working">Spelar in</string>
     <string name="sound_last_title">Senaste inspelning</string>

@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">Səsyazan</string>
+    <string name="app_name">Circular Recorder</string>
     <string name="share">Paylaş</string>
     <string name="share_selected">Seçiləni paylaş</string>
     <string name="stop">Dayandır</string>
@@ -33,7 +33,7 @@
     <string name="record_again">Yenidən yaz</string>
     <string name="confirm_result_title">Səsyazma istifadə edilsin?</string>
     <string name="confirm_result_message">Son səsyazmanı istifadə etmək istəyirsiniz?</string>
-    <string name="sound_notification_title">Səs Yazma</string>
+    <string name="sound_notification_title">Circular Sound Recorder</string>
     <string name="sound_notification_message">Səs uzunluğu: %1$s</string>
     <string name="sound_recording_title_working">Səs yazılır</string>
     <string name="sound_recording_title_paused">Fasilə verildi</string>

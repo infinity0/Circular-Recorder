@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">บันทึกเสียง</string>
+    <string name="app_name">Circular Recorder</string>
     <string name="share">แชร์</string>
     <string name="share_selected">แชร์รายการที่เลือก</string>
     <string name="stop">หยุด</string>
@@ -30,7 +30,7 @@
     <string name="confirm">ยืนยัน</string>
     <string name="discard">ละทิ้ง</string>
     <string name="record_again">บันทึกเสียงใหม่</string>
-    <string name="sound_notification_title">บันทึกเสียง</string>
+    <string name="sound_notification_title">Circular Sound Recorder</string>
     <string name="sound_notification_message">ความยาวเสียง: %1$s</string>
     <string name="sound_recording_title_working">การบันทึก</string>
     <string name="sound_recording_title_paused">หยุดชั่วคราว</string>

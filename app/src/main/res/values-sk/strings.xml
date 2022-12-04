@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">Rekordér</string>
+    <string name="app_name">Circular Recorder</string>
     <string name="share">Zdieľať</string>
     <string name="stop">Zastaviť</string>
     <string name="play">Prehrať</string>
@@ -25,7 +25,7 @@
     <string name="rename">Premenovať</string>
     <string name="delete_title">Mazanie záznamu</string>
     <string name="delete_recording_message">Naozaj chcete vymazať tento záznam? Táto akcia je nevratná</string>
-    <string name="sound_notification_title">Nahrávanie zvuku</string>
+    <string name="sound_notification_title">Circular Sound Recorder</string>
     <string name="sound_notification_message">Dĺžka zvukového záznamu: %1$s</string>
     <string name="sound_recording_title_working">Nahrávanie</string>
     <string name="sound_recording_title_paused">Pozastavené</string>

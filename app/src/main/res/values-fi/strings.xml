@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">Nauhoitus</string>
+    <string name="app_name">Circular Recorder</string>
     <string name="share">Jaa</string>
     <string name="stop">Lopeta</string>
     <string name="play">Toista</string>
@@ -25,7 +25,7 @@
     <string name="rename">Uudelleennimeä</string>
     <string name="delete_title">Poistetaan nauhoitusta</string>
     <string name="delete_recording_message">Haluatko varmasti poistaa tämän nauhoitteen? Poistoa ei voi peruuttaa!</string>
-    <string name="sound_notification_title">Ääninauhuri</string>
+    <string name="sound_notification_title">Circular Sound Recorder</string>
     <string name="sound_notification_message">Äänen kesto: %1$s</string>
     <string name="sound_recording_title_working">Nauhoitetaan</string>
     <string name="sound_recording_title_paused">Keskeytetty</string>

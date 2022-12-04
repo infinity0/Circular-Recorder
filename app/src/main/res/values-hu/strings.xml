@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">Felvevő</string>
+    <string name="app_name">Circular Recorder</string>
     <string name="share">Megosztás</string>
     <string name="share_selected">A kijelöltek megosztása</string>
     <string name="stop">Leállítás</string>
@@ -33,7 +33,7 @@
     <string name="record_again">Ismételt felvétel</string>
     <string name="confirm_result_title">Használja a felvételt?</string>
     <string name="confirm_result_message">Szeretné a legutóbb felvettet használni?</string>
-    <string name="sound_notification_title">Hangrögzítő</string>
+    <string name="sound_notification_title">Circular Sound Recorder</string>
     <string name="sound_notification_message">Audio hossza: %1$s</string>
     <string name="sound_recording_title_working">Felvétel</string>
     <string name="sound_recording_title_paused">Szüneteltetve</string>

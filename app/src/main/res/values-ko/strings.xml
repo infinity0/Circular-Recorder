@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">녹음기</string>
+    <string name="app_name">Circular Recorder</string>
     <string name="share">공유</string>
     <string name="share_selected">선택 항목 공유</string>
     <string name="stop">정지</string>
@@ -33,7 +33,7 @@
     <string name="record_again">다시 녹음</string>
     <string name="confirm_result_title">녹음을 사용할까요?</string>
     <string name="confirm_result_message">마지막으로 녹음한 내용을 사용하시겠습니까?</string>
-    <string name="sound_notification_title">소리 녹음기</string>
+    <string name="sound_notification_title">Circular Sound Recorder</string>
     <string name="sound_notification_message">오디오 길이: %1$s</string>
     <string name="sound_recording_title_working">녹음 중</string>
     <string name="sound_recording_title_paused">일시 정지됨</string>

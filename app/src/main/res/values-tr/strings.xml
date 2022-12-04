@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">Kaydedici</string>
+    <string name="app_name">Circular Recorder</string>
     <string name="share">Paylaş</string>
     <string name="share_selected">Seçilenleri paylaş</string>
     <string name="stop">Durdur</string>
@@ -33,7 +33,7 @@
     <string name="record_again">Tekrar kaydet</string>
     <string name="confirm_result_title">Kayıt kullanılsın mı?</string>
     <string name="confirm_result_message">Son kaydı kullanmak istiyor musunuz?</string>
-    <string name="sound_notification_title">Ses Kaydedici</string>
+    <string name="sound_notification_title">Circular Sound Recorder</string>
     <string name="sound_notification_message">Ses uzunluğu: %1$s</string>
     <string name="sound_recording_title_working">Kaydediliyor</string>
     <string name="sound_recording_title_paused">Duraklatıldı</string>

@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 <resources>
-    <string name="app_name">Snemalnik</string>
+    <string name="app_name">Circular Recorder</string>
     <string name="share">Souporaba</string>
     <string name="share_selected">Deli izbrano</string>
     <string name="stop">Ustavi</string>
@@ -33,7 +33,7 @@
     <string name="record_again">Snemaj ponovno</string>
     <string name="confirm_result_title">Uporabi posnetek?</string>
     <string name="confirm_result_message">Ali želite uporabiti zadnji posnetek?</string>
-    <string name="sound_notification_title">Snemalnik zvoka</string>
+    <string name="sound_notification_title">Circular Sound Recorder</string>
     <string name="sound_notification_message">Dolžina zvoka: %1$s</string>
     <string name="sound_recording_title_working">Snemanje</string>
     <string name="sound_recording_title_paused">V premoru</string>
