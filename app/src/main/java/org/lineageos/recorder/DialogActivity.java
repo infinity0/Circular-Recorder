@@ -176,9 +176,11 @@ public class DialogActivity extends AppCompatActivity {
         } else {
             circularSwitch.setOnCheckedChangeListener((button, isChecked) -> {
                 if (isChecked) {
-                    if (mPermissionManager.hasBatteryPermission()) {
-                        mPreferences.setCircularRecording(true);
-                    } else {
+                    // we do things a bit differently from setupLocationSwitch:
+                    // there is no completion callback for the special battery permission
+                    // so we have to set this true here, as we can't do it afterwards
+                    mPreferences.setCircularRecording(true);
+                    if (!mPermissionManager.hasBatteryPermission()) {
                         mPermissionManager.requestBatteryPermission();
                     }
                 } else {
