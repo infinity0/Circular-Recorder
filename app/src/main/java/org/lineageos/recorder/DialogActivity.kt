@@ -8,8 +8,11 @@ package org.lineageos.recorder
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.CompoundButton
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatEditText
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.materialswitch.MaterialSwitch
 import org.lineageos.recorder.utils.PermissionManager
@@ -19,6 +22,7 @@ class DialogActivity : AppCompatActivity() {
     // Views
     private lateinit var highQualitySwitch: MaterialSwitch
     private lateinit var locationSwitch: MaterialSwitch
+    private lateinit var circularSwitch: MaterialSwitch
 
     private val permissionManager: PermissionManager by lazy { PermissionManager(this) }
 
@@ -42,6 +46,20 @@ class DialogActivity : AppCompatActivity() {
 
         highQualitySwitch = dialog.findViewById(R.id.highQualitySwitch)!!
         setupHighQualitySwitch(highQualitySwitch, isRecording)
+
+        circularSwitch = dialog.findViewById(R.id.circularSwitch)!!
+        setupCircularSwitch(circularSwitch, isRecording)
+
+        val circularPeriodInput: AppCompatEditText? = dialog.findViewById(
+                R.id.dialog_content_settings_circular_recording_period_input)
+        if (circularPeriodInput != null) {
+            setupCircularPeriodInput(circularPeriodInput, isRecording)
+        }
+        val circularNumberInput: AppCompatEditText? = dialog.findViewById(
+                R.id.dialog_content_settings_circular_recording_number_input)
+        if (circularNumberInput != null) {
+            setupCircularNumberInput(circularNumberInput, isRecording)
+        }
     }
 
     override fun onRequestPermissionsResult(
@@ -106,6 +124,79 @@ class DialogActivity : AppCompatActivity() {
                     preferences.tagWithLocation = false
                 }
             }
+        }
+    }
+
+    private fun setupCircularSwitch(
+        circularSwitch: MaterialSwitch,
+        isRecording: Boolean
+    ) {
+        val circularRecording = if (preferences.circularRecording) {
+            if (permissionManager.hasBatteryPermission()) {
+                true
+            } else {
+                // Permission revoked -> disabled feature
+                preferences.circularRecording = false
+                false
+            }
+        } else {
+            false
+        }
+        circularSwitch.isChecked = circularRecording
+        if (isRecording) {
+            circularSwitch.isEnabled = false
+        } else {
+            circularSwitch.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
+                if (isChecked) {
+                    if (permissionManager.hasBatteryPermission()) {
+                        preferences.circularRecording = true
+                    } else {
+                        permissionManager.requestBatteryPermission()
+                    }
+                } else {
+                    preferences.circularRecording = false
+                }
+            }
+        }
+    }
+
+    private fun setupCircularPeriodInput(input: AppCompatEditText, isRecording: Boolean) {
+        val v: Long = preferences.circularRecordingPeriod
+        input.setText(java.text.DecimalFormat("0.#").format(v.toDouble() / 60.0))
+
+        if (isRecording) {
+            input.setEnabled(false)
+        } else {
+            input.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable) {
+                    val str: String = s.toString()
+                    if (str.length > 0) {
+                        preferences.circularRecordingPeriod = (str.toDouble() * 60.0).toLong()
+                    }
+                }
+                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            })
+        }
+    }
+
+    private fun setupCircularNumberInput(input: AppCompatEditText, isRecording: Boolean) {
+        val v: Int = preferences.circularRecordingNumber
+        input.setText(Integer.toString(v))
+
+        if (isRecording) {
+            input.setEnabled(false)
+        } else {
+            input.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable) {
+                    val str: String = s.toString()
+                    if (str.length > 0) {
+                        preferences.circularRecordingNumber = str.toInt()
+                    }
+                }
+                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            })
         }
     }
 

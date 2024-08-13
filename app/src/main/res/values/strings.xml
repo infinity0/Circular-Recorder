@@ -4,7 +4,7 @@
      SPDX-License-Identifier: Apache-2.0
 -->
 <resources>
-    <string name="app_name">Recorder</string>
+    <string name="app_name">Circular Recorder</string>
 
     <!-- Common actions -->
     <!-- Share action for notification -->
@@ -46,7 +46,7 @@
 
     <!-- Sound recorder -->
     <!-- Sound recorder notification title -->
-    <string name="sound_notification_title">Sound Recorder</string>
+    <string name="sound_notification_title">Circular Sound Recorder</string>
     <!-- Sound recorder notification message -->
     <string name="sound_notification_message">Audio length: %1$s</string>
     <!-- Sound recorder status card title recording -->
@@ -67,6 +67,12 @@
     <string name="settings_location_message">Tag your recordings with your current position</string>
     <!-- Settings: recording in high quality -->
     <string name="settings_quality_high">Record in high quality</string>
+    <!-- Settings: circular recording -->
+    <string name="settings_circular_recording">Circular recording</string>
+    <!-- Settings: circular recording -->
+    <string name="settings_circular_recording_period">Circular recording period, in minutes</string>
+    <!-- Settings: circular recording -->
+    <string name="settings_circular_recording_number">Circular recording, number of periods</string>
 
     <!-- Permissions -->
     <!-- Permissions dialog title -->

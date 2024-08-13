@@ -16,6 +16,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.content.pm.ServiceInfo
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
@@ -37,6 +38,7 @@ import org.lineageos.recorder.R
 import org.lineageos.recorder.RecorderActivity
 import org.lineageos.recorder.status.UiStatus
 import org.lineageos.recorder.task.AddRecordingToContentProviderTask
+import org.lineageos.recorder.task.DeleteRecordingTask
 import org.lineageos.recorder.task.TaskExecutor
 import org.lineageos.recorder.utils.PreferencesManager
 import org.lineageos.recorder.utils.RecordIntentHelper
@@ -44,6 +46,12 @@ import java.io.IOException
 import java.lang.ref.WeakReference
 import java.nio.file.Files
 import java.nio.file.Path
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder
+import java.time.temporal.ChronoUnit
+import java.util.LinkedList
+import java.util.Locale
 import java.util.Timer
 import java.util.TimerTask
 
@@ -84,11 +92,17 @@ class SoundRecorderService : Service() {
     }
     private val messenger = Messenger(handler)
     private var recorder: SoundRecording? = null
+    private var recordTag: String? = null
     private var recordPath: Path? = null
     private var amplitudeTimer: Timer? = null
     private var elapsedTimeTimer: Timer? = null
     private var isPaused = false
     private var elapsedTime = 0L
+
+    // Circular recording state
+    private var circularRecordingDirectory: String? = null
+    private var circularRecordings: LinkedList<Uri>? = null
+    private var autoReRecord: Boolean = false
 
     private val shutdownReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -127,7 +141,7 @@ class SoundRecorderService : Service() {
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int) = when (intent.action) {
         ACTION_START -> intent.getStringExtra(EXTRA_FILE_NAME)?.let {
-            if (startRecording(it)) {
+            if (startRecording(it, intent.getBooleanExtra(IS_CIRCULAR, false))) {
                 START_STICKY
             } else {
                 START_NOT_STICKY
@@ -143,7 +157,26 @@ class SoundRecorderService : Service() {
         else -> START_NOT_STICKY
     }
 
-    private fun startRecording(fileName: String): Boolean {
+    private fun newRecordFileName(tag: String?, circularRecording: Boolean): String {
+        val formatter = DateTimeFormatterBuilder()
+                .append(DateTimeFormatter.ISO_LOCAL_DATE)
+                .appendLiteral(' ')
+                .append(DateTimeFormatter.ISO_LOCAL_TIME)
+                .toFormatter(Locale.getDefault())
+        val now = LocalDateTime.now()
+        val fileName = String.format(
+            RecorderActivity.FILE_NAME_BASE, tag,
+            formatter.format(now.truncatedTo(ChronoUnit.SECONDS)))
+        if (circularRecording) {
+            if (circularRecordingDirectory == null) {
+                circularRecordingDirectory = fileName
+                circularRecordings = LinkedList<Uri>()
+            }
+        }
+        return fileName + ".%1\$s"
+    }
+
+    private fun startRecording(tag: String?, circularRecording: Boolean): Boolean {
         if (checkSelfPermission(permission.RECORD_AUDIO)
             != PackageManager.PERMISSION_GRANTED
         ) {
@@ -155,6 +188,8 @@ class SoundRecorderService : Service() {
             true -> HighQualityRecorder()
             else -> GoodQualityRecorder(this)
         }
+        recordTag = tag
+        val fileName = newRecordFileName(tag, circularRecording)
 
         return recorder?.let { recorder ->
             val optPath = createNewAudioFile(fileName, recorder.fileExtension) ?: run {
@@ -175,7 +210,8 @@ class SoundRecorderService : Service() {
             notifyStatus(UiStatus.RECORDING)
             notifyElapsedTime(0)
             startTimers()
-            startForeground(NOTIFICATION_ID, createRecordingNotification(0))
+            // FIXME requires SDK 33 if app is in background, see build.gradle.kts for details
+            startForeground(NOTIFICATION_ID, createRecordingNotification(0), ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE)
 
             true
         } ?: false
@@ -201,8 +237,9 @@ class SoundRecorderService : Service() {
                 AddRecordingToContentProviderTask(
                     contentResolver,
                     it,
+                    circularRecordingDirectory,
                     recorder.mimeType
-                ), { uri: String? -> onRecordCompleted(uri) }
+                ), { uri: Uri? -> onRecordCompleted(uri) }
             ) { Log.e(TAG, "Failed to save recording") }
 
             true
@@ -267,17 +304,37 @@ class SoundRecorderService : Service() {
         }
     }
 
-    private fun onRecordCompleted(uri: String?) {
+    private fun onRecordCompleted(uri: Uri?) {
         notifyStatus(UiStatus.READY)
         stopForeground(STOP_FOREGROUND_REMOVE)
 
         uri?.let {
-            createShareNotification(it)?.let { shareNotification ->
+            createShareNotification(it.toString())?.let { shareNotification ->
                 notificationManager.notify(NOTIFICATION_ID, shareNotification)
             }
-        }
 
-        recorder = null
+            val tag = recordTag
+            recorder = null
+            recordTag = null
+            if (autoReRecord) {
+                autoReRecord = false
+                Log.i(TAG, "circular recording save: " + it.toString())
+                startRecording(tag, circularRecordingDirectory != null)
+                if (circularRecordingDirectory != null) {
+                    circularRecordings!!.addLast(it)
+                    while (circularRecordings!!.size > preferencesManager.circularRecordingNumber) {
+                        val dropUri: Uri = circularRecordings!!.removeFirst()
+                        Log.i(TAG, "circular recording drop: " + dropUri.toString())
+                        taskExecutor.runTask(
+                            DeleteRecordingTask(contentResolver, dropUri)
+                        ) {}
+                    }
+                }
+            } else {
+                circularRecordingDirectory = null
+                circularRecordings = null
+            }
+        }
     }
 
     private fun onRecordFailed() {
@@ -325,6 +382,10 @@ class SoundRecorderService : Service() {
                     notifyElapsedTime(newElapsedTime)
                     val notification = createRecordingNotification(newElapsedTime)
                     notificationManager.notify(NOTIFICATION_ID, notification)
+                    if (circularRecordingDirectory != null && newElapsedTime >= preferencesManager.circularRecordingPeriod) {
+                        stopRecording()
+                        autoReRecord = true
+                    }
                 }
             }, 1000, 1000)
         }
@@ -473,7 +534,15 @@ class SoundRecorderService : Service() {
                     .setAction(ACTION_PAUSE),
                 PendingIntent.FLAG_IMMUTABLE
             )
-            nb.setContentTitle(getString(R.string.sound_recording_title_working))
+            var suffix = ""
+            if (circularRecordingDirectory != null) {
+                val period = preferencesManager.circularRecordingPeriod
+                val currentNum = circularRecordings!!.size
+                val number = preferencesManager.circularRecordingNumber
+                suffix = String.format(" ⏲ %s ↺ %s/%s",
+                    DateUtils.formatElapsedTime(period - elapsedTime), currentNum, number)
+            }
+            nb.setContentTitle(getString(R.string.sound_recording_title_working) + suffix)
             nb.addAction(R.drawable.ic_pause, getString(R.string.pause), pausePIntent)
         }
         nb.addAction(R.drawable.ic_stop, getString(R.string.stop), stopPIntent)
@@ -580,6 +649,7 @@ class SoundRecorderService : Service() {
         const val MSG_TIME_ELAPSED = 4
 
         const val EXTRA_FILE_NAME = "extra_filename"
+        const val IS_CIRCULAR = "is_circular"
         private const val LEGACY_MUSIC_DIR = "Sound records"
 
         const val NOTIFICATION_ID = 60

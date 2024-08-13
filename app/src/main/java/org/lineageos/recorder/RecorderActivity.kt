@@ -46,11 +46,6 @@ import org.lineageos.recorder.utils.OnBoardingHelper
 import org.lineageos.recorder.utils.PermissionManager
 import org.lineageos.recorder.utils.PreferencesManager
 import org.lineageos.recorder.utils.Utils
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeFormatterBuilder
-import java.time.temporal.ChronoUnit
-import java.util.Locale
 import kotlin.reflect.safeCast
 
 class RecorderActivity : AppCompatActivity(R.layout.activity_main) {
@@ -224,10 +219,15 @@ class RecorderActivity : AppCompatActivity(R.layout.activity_main) {
 
         if (uiStatus == UiStatus.READY) {
             // Start
+            val circularRecording = preferencesManager.circularRecording
+            if (circularRecording) {
+                permissionManager.requestBatteryPermission()
+            }
             startService(
                 Intent(this, SoundRecorderService::class.java)
                     .setAction(SoundRecorderService.ACTION_START)
-                    .putExtra(SoundRecorderService.EXTRA_FILE_NAME, newRecordFileName)
+                    .putExtra(SoundRecorderService.IS_CIRCULAR, circularRecording)
+                    .putExtra(SoundRecorderService.EXTRA_FILE_NAME, newRecordTag)
             )
         } else {
             // Stop
@@ -368,23 +368,14 @@ class RecorderActivity : AppCompatActivity(R.layout.activity_main) {
             .show()
     }
 
-    private val newRecordFileName: String
+    private val newRecordTag: String
         get() {
             val tag = locationHelper.currentLocationName ?: FILE_NAME_FALLBACK
-            val formatter = DateTimeFormatterBuilder()
-                .append(DateTimeFormatter.ISO_LOCAL_DATE)
-                .appendLiteral(' ')
-                .append(DateTimeFormatter.ISO_LOCAL_TIME)
-                .toFormatter(Locale.getDefault())
-            val now = LocalDateTime.now()
-            return String.format(
-                FILE_NAME_BASE, tag,
-                formatter.format(now.truncatedTo(ChronoUnit.SECONDS))
-            ) + ".%1\$s"
+            return tag
         }
 
     companion object {
-        private const val FILE_NAME_BASE = "%1\$s (%2\$s)"
+        const val FILE_NAME_BASE = "%1\$s (%2\$s)"
         private const val FILE_NAME_FALLBACK = "Sound record"
     }
 }

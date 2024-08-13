@@ -8,9 +8,14 @@ package org.lineageos.recorder.utils
 import android.Manifest.permission
 import android.app.Activity
 import android.app.NotificationManager
+import android.content.Context
+import android.content.Intent
 import android.content.DialogInterface
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
+import android.os.PowerManager
+import android.provider.Settings
 import androidx.annotation.StringRes
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.lineageos.recorder.R
@@ -48,6 +53,15 @@ class PermissionManager(private val activity: Activity) {
         }
     }
 
+    fun requestBatteryPermission() {
+        // battery optimisation is not a normal permission and has to be checked specially
+        if (!hasBatteryPermission()) {
+            activity.startActivity(Intent(
+                Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
+                Uri.parse("package:"+activity.getPackageName())))
+        }
+    }
+
     fun hasEssentialPermissions(): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             hasRecordAudioPermission() && hasPhoneReadStatusPermission() &&
@@ -71,6 +85,12 @@ class PermissionManager(private val activity: Activity) {
         permission.ACCESS_COARSE_LOCATION,
         permission.ACCESS_FINE_LOCATION,
     ).any { activity.checkSelfPermission(it) == PackageManager.PERMISSION_GRANTED }
+
+    fun hasBatteryPermission(): Boolean {
+        // battery optimisation is not a normal permission and has to be checked specially
+        val pwm : PowerManager = activity.getApplicationContext().getSystemService(PowerManager::class.java)
+        return pwm.isIgnoringBatteryOptimizations(activity.getPackageName())
+    }
 
     fun onEssentialPermissionsDenied() {
         if (activity.shouldShowRequestPermissionRationale(permission.POST_NOTIFICATIONS) ||

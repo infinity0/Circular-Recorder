@@ -7,6 +7,7 @@ package org.lineageos.recorder.task
 
 import android.content.ContentResolver
 import android.content.ContentValues
+import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
@@ -19,13 +20,14 @@ import java.util.concurrent.Callable
 class AddRecordingToContentProviderTask(
     private val contentResolver: ContentResolver,
     private val path: Path,
+    private val album: String?,
     private val mimeType: String
-) : Callable<String?> {
-    override fun call(): String? {
+) : Callable<Uri?> {
+    override fun call(): Uri? {
         val uri = contentResolver.insert(
             MediaStore.Audio.Media.getContentUri(
                 MediaStore.VOLUME_EXTERNAL_PRIMARY
-            ), buildCv(path)
+            ), buildCv(path, album)
         ) ?: run {
             Log.e(TAG, "Failed to insert " + path.toAbsolutePath().toString())
             return null
@@ -46,7 +48,7 @@ class AddRecordingToContentProviderTask(
                 } catch (e: IOException) {
                     Log.w(TAG, "Failed to delete tmp file")
                 }
-                return uri.toString()
+                return uri
             }
         } catch (e: IOException) {
             Log.e(TAG, "Failed to write into MediaStore", e)
@@ -54,22 +56,20 @@ class AddRecordingToContentProviderTask(
         }
     }
 
-    private fun buildCv(path: Path): ContentValues {
+    private fun buildCv(path: Path, album_: String?): ContentValues {
         val name = path.fileName.toString()
         val values = ContentValues()
+        val album = if (album_ == null) ALBUM else album
+        val relativePath: String = (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) DIR_PATH else DIR_PATH_LEGACY) + album
         values.put(MediaStore.Audio.Media.DISPLAY_NAME, name)
         values.put(MediaStore.Audio.Media.TITLE, name)
         values.put(MediaStore.Audio.Media.MIME_TYPE, mimeType)
         values.put(MediaStore.Audio.Media.ARTIST, ARTIST)
-        values.put(MediaStore.Audio.Media.ALBUM, ALBUM)
+        values.put(MediaStore.Audio.Media.ALBUM, album)
         values.put(MediaStore.Audio.Media.DATE_ADDED, System.currentTimeMillis() / 1000L)
         values.put(
             MediaStore.Audio.Media.RELATIVE_PATH,
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                PATH
-            } else {
-                PATH_LEGACY
-            }
+            relativePath
         )
         values.put(MediaStore.Audio.Media.IS_PENDING, 1)
         return values
@@ -82,7 +82,7 @@ class AddRecordingToContentProviderTask(
 
         private const val ALBUM = "Sound records"
 
-        private const val PATH = "Recordings/$ALBUM"
-        private const val PATH_LEGACY = "Music/$ALBUM"
+        private const val DIR_PATH = "Recordings/"
+        private const val DIR_PATH_LEGACY = "Music/"
     }
 }

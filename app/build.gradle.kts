@@ -31,11 +31,19 @@ android {
     namespace = "org.lineageos.recorder"
 
     defaultConfig {
-        applicationId = "org.lineageos.recorder"
+        applicationId = "org.lineageos.recorder.circular"
         minSdk = 29
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.1"
+        // FIXME: SDK 33 is required for now, as 34 has extra security checks
+        // that prevent us from restarting a recording from the background
+        // see https://developer.android.com/about/versions/14/changes/fgs-types-required#microphone
+        // and https://developer.android.com/develop/background-work/services/foreground-services#wiu-restrictions-exemptions
+        // in fact START_ACTIVITIES_FROM_BACKGROUND does not work:
+        // https://stackoverflow.com/questions/68855281/android-11-restrictions-on-microphone-use
+        // and START_FOREGROUND_SERVICES_FROM_BACKGROUND does not work either:
+        // https://developer.android.com/reference/android/Manifest.permission#START_FOREGROUND_SERVICES_FROM_BACKGROUND
+        targetSdk = 33
+        versionCode = 100001
+        versionName = "1.0+1.1"
     }
 
     buildTypes {
