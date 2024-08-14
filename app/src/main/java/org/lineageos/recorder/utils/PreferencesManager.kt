@@ -11,6 +11,14 @@ import android.net.Uri
 class PreferencesManager(context: Context) {
     private val preferences = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
+    var isCurrentlyRecording: Boolean
+        get() = preferences.getBoolean(PREF_IS_CURRENTLY_RECORDING, false)
+        set(isCurrentlyRecording) {
+            preferences.edit()
+                .putBoolean(PREF_IS_CURRENTLY_RECORDING, isCurrentlyRecording)
+                .apply()
+        }
+
     var recordInHighQuality: Boolean
         get() = preferences.getInt(PREF_RECORDING_QUALITY, 0) == 1
         set(value) {
@@ -80,6 +88,7 @@ class PreferencesManager(context: Context) {
 
     companion object {
         private const val PREFS = "preferences"
+        private const val PREF_IS_CURRENTLY_RECORDING = "is_currently_recording"
         private const val PREF_TAG_WITH_LOCATION = "tag_with_location"
         private const val PREF_RECORDING_QUALITY = "recording_quality"
         private const val PREF_CIRCULAR_RECORDING = "circular_recording"

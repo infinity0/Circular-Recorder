@@ -110,9 +110,19 @@ class SoundRecorderService : Service() {
         }
     }
 
+    private val startupReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            Log.i(TAG, "startupReceiver onReceive called")
+            val tag = RecorderActivity.FILE_NAME_FALLBACK // FIXME get tag properly
+            val isCircular = preferencesManager.circularRecording
+            // FIXME requires SDK 33 if app is in background, see build.gradle.kts for details
+            startRecording(tag, isCircular)
+        }
+    }
     override fun onBind(intent: Intent): IBinder = messenger.binder
 
     override fun onCreate() {
+        Log.i(TAG, "onCreate called")
         super.onCreate()
 
         ContextCompat.registerReceiver(
@@ -128,6 +138,8 @@ class SoundRecorderService : Service() {
     }
 
     override fun onDestroy() {
+        Log.i(TAG, "onDestroy called")
+
         unregisterReceiver(shutdownReceiver)
 
         stopTimers()
@@ -139,7 +151,27 @@ class SoundRecorderService : Service() {
         super.onDestroy()
     }
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int) = when (intent.action) {
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int) = if (intent == null) {
+        Log.i(TAG, "onStartCommand called with null Intent, i.e. service auto-restarted, recording " + preferencesManager.isCurrentlyRecording)
+        // FIXME: the last unsaved recording from the previous session is lost.
+        // recovering it is very difficult because Recorder saves it to a temp file in /sdcard/Android/data or something
+        // see https://gitlab.com/LineageOS/issues/android/-/issues/7547
+
+        if (preferencesManager.isCurrentlyRecording) {
+            // screen is probably locked, so wait until the user unlocks it via ACTION_USER_PRESENT
+            ContextCompat.registerReceiver(
+                this,
+                startupReceiver,
+                IntentFilter(Intent.ACTION_USER_PRESENT),
+                ContextCompat.RECEIVER_EXPORTED
+            )
+
+            START_STICKY
+        } else {
+            START_NOT_STICKY
+        }
+    } else when (intent.action) {
         ACTION_START -> intent.getStringExtra(EXTRA_FILE_NAME)?.let {
             if (startRecording(it, intent.getBooleanExtra(IS_CIRCULAR, false))) {
                 START_STICKY
@@ -155,6 +187,10 @@ class SoundRecorderService : Service() {
         ACTION_RESUME -> if (resumeRecording()) START_STICKY else START_NOT_STICKY
 
         else -> START_NOT_STICKY
+    }
+
+    override fun onTaskRemoved(rootIntent: Intent) {
+        Log.i(TAG, "onTaskRemoved")
     }
 
     private fun newRecordFileName(tag: String?, circularRecording: Boolean): String {
@@ -177,6 +213,9 @@ class SoundRecorderService : Service() {
     }
 
     private fun startRecording(tag: String?, circularRecording: Boolean): Boolean {
+        Log.i(TAG, "startRecording called")
+        preferencesManager.isCurrentlyRecording = true
+
         if (checkSelfPermission(permission.RECORD_AUDIO)
             != PackageManager.PERMISSION_GRANTED
         ) {
@@ -198,6 +237,7 @@ class SoundRecorderService : Service() {
             }
 
             this.recordPath = optPath
+            Log.i(TAG, "recordPath in " + this.recordPath)
 
             isPaused = false
             elapsedTime = 0
@@ -218,6 +258,9 @@ class SoundRecorderService : Service() {
     }
 
     private fun stopRecording(): Boolean {
+        Log.i(TAG, "stopRecording called")
+        preferencesManager.isCurrentlyRecording = false
+
         val recorder = recorder ?: run {
             Log.e(TAG, "Trying to stop null recorder")
             return false
@@ -250,6 +293,7 @@ class SoundRecorderService : Service() {
     }
 
     private fun pauseRecording(): Boolean {
+        Log.i(TAG, "pauseRecording called")
         if (isPaused) {
             Log.w(TAG, "Pausing already paused recording")
             return false

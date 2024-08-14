@@ -376,6 +376,6 @@ class RecorderActivity : AppCompatActivity(R.layout.activity_main) {
 
     companion object {
         const val FILE_NAME_BASE = "%1\$s (%2\$s)"
-        private const val FILE_NAME_FALLBACK = "Sound record"
+        const val FILE_NAME_FALLBACK = "Sound record"
     }
 }
